@@ -5,5 +5,6 @@ class Const {
   static String subUrl = "/api/v1/";
   // static String apiKey = dotenv.env['API_KEY_1'] ?? "";
   // static String apiKey = dotenv.env['API_KEY_2'] ?? "";
-  static String apiKey = dotenv.env['API_KEY_3'] ?? "";
+  static String apiKey = dotenv.env['API_KEY'] ?? "";
+  // static String apiKey = '4eCdyBqZ0b3f615ff7574695OUY24z12';
 }
