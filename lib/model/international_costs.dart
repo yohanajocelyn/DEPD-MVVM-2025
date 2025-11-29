@@ -1,0 +1,81 @@
+part of 'model.dart';
+
+class InternationalCosts extends Equatable implements ShippingCosts {
+  final String? name;
+  final String? code;
+  final String? service;
+  final String? description;
+  final String? currency;
+  final double? cost;
+  final String? etd;
+  final String? currencyUpdatedAt;
+  final double? currencyValue;
+
+  const InternationalCosts({
+    this.name,
+    this.code,
+    this.service,
+    this.description,
+    this.currency,
+    this.cost,
+    this.etd,
+    this.currencyUpdatedAt,
+    this.currencyValue,
+  });
+
+  factory InternationalCosts.fromJson(Map<String, dynamic> json) {
+    return InternationalCosts(
+      name: json['name'] as String?,
+      code: json['code'] as String?,
+      service: json['service'] as String?,
+      description: json['description'] as String?,
+      currency: json['currency'] as String?,
+      cost: json['cost'] as double?,
+      etd: json['etd'] as String?,
+      currencyUpdatedAt: json['currency_updated_at'] as String?,
+      currencyValue: json['currency_value'] as double?,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'code': code,
+    'service': service,
+    'description': description,
+    'currency': currency,
+    'cost': cost,
+    'etd': etd,
+    'currency_updated_at': currencyUpdatedAt,
+    'currency_value': currencyValue,
+  };
+
+  @override
+  List<Object?> get props {
+    return [
+      name,
+      code,
+      service,
+      description,
+      currency,
+      cost,
+      etd,
+      currencyUpdatedAt,
+      currencyValue,
+    ];
+  }
+
+  @override
+  String? get displayName => name;
+
+  @override
+  String? get displayService => service;
+
+  @override
+  double? get displayCost => cost;
+
+  @override
+  String? get displayEtd => etd;
+
+  @override
+  String? get currencyCode => currency ?? "IDR";
+}

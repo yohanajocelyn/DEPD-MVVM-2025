@@ -30,11 +30,15 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // Memanggil logika bawaan framework dulu
     super.initState();
-    // Inisialisasi ViewModel dan load data provinsi jika belum dimulai
+    // 1. Get the reference (This is safe to do here)
     homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
-    if (homeViewModel.provinceList.status == Status.notStarted) {
-      homeViewModel.getProvinceList();
-    }
+    
+    // 2. Schedule the API call to run AFTER the build is done
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (homeViewModel.provinceList.status == Status.notStarted) {
+        homeViewModel.getProvinceList();
+      }
+    });
   }
 
   // Membersihkan TextEditingController dan menghentikan listener stream ketika dihapus dari widget tree untuk mencegah memory leak
@@ -137,7 +141,8 @@ class _HomePageState extends State<HomePage> {
 
                                   return DropdownButton<int>(
                                     isExpanded: true,
-                                    value: selectedProvinceOriginId, // Masih null saat awal
+                                    value:
+                                        selectedProvinceOriginId, // Masih null saat awal
                                     hint: const Text('Pilih provinsi'),
                                     items: provinces
                                         .map(
@@ -147,7 +152,8 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         )
                                         .toList(),
-                                    onChanged: (newId) { // Ketika user memilih provinsi baru, misalnya ID 1
+                                    onChanged: (newId) {
+                                      // Ketika user memilih provinsi baru, misalnya ID 1
                                       setState(() {
                                         selectedProvinceOriginId = newId;
                                         selectedCityOriginId =
@@ -155,9 +161,7 @@ class _HomePageState extends State<HomePage> {
                                       });
                                       // Jika ada ID provinsi yang dipilih, load daftar kota untuk provinsi tersebut
                                       if (newId != null) {
-                                        vm.getCityOriginList(
-                                          newId,
-                                        );
+                                        vm.getCityOriginList(newId);
                                       }
                                     },
                                   );

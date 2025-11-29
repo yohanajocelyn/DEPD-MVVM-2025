@@ -1,6 +1,6 @@
 part of 'model.dart';
 
-class Costs extends Equatable {
+class Costs extends Equatable implements ShippingCosts {
   final String? name;
   final String? code;
   final String? service;
@@ -39,4 +39,19 @@ class Costs extends Equatable {
   List<Object?> get props {
     return [name, code, service, description, cost, etd];
   }
+
+  @override
+  String? get displayName => name;
+
+  @override
+  String? get displayService => service;
+
+  @override
+  double? get displayCost => cost?.toDouble(); // Convert int to double
+
+  @override
+  String? get displayEtd => etd;
+
+  @override
+  String? get currencyCode => "IDR";
 }

@@ -1,8 +1,9 @@
 part of 'widgets.dart';
 
-// Widget untuk menampilkan informasi biaya pengiriman dalam bentuk card
 class CardCost extends StatefulWidget {
-  final Costs cost;
+  // Accept the interface instead of specific implementation
+  final ShippingCosts cost; 
+  
   const CardCost(this.cost, {super.key});
 
   @override
@@ -10,26 +11,36 @@ class CardCost extends StatefulWidget {
 }
 
 class _CardCostState extends State<CardCost> {
-  // Memformat angka menjadi mata uang Rupiah
-  String rupiahMoneyFormatter(int? value) {
-    if (value == null) return "Rp0,00";
+  
+  // Dynamic Currency Formatter
+  String currencyFormatter(double? value, String currencyCode) {
+    if (value == null) return "-";
+    
+    // Determine symbol based on code
+    // You can expand this logic or use a library for auto-symbols
+    String symbol = currencyCode;
+    if (currencyCode == 'IDR') symbol = 'Rp';
+    else if (currencyCode == 'USD') symbol = '\$';
+
     final formatter = NumberFormat.currency(
-      locale: 'id_ID',
-      symbol: 'Rp',
+      locale: currencyCode == 'IDR' ? 'id_ID' : 'en_US',
+      symbol: symbol,
       decimalDigits: 2,
     );
+    
     return formatter.format(value);
   }
 
-  // Memformat satuan "day" menjadi "hari" pada estimasi pengiriman
   String formatEtd(String? etd) {
     if (etd == null || etd.isEmpty) return '-';
+    // Handle "3 days" vs "3-4 hari" logic if needed
     return etd.replaceAll('day', 'hari').replaceAll('days', 'hari');
   }
 
   @override
   Widget build(BuildContext context) {
-    Costs cost = widget.cost;
+    // Access via the interface
+    final cost = widget.cost;
 
     return Card(
       shape: RoundedRectangleBorder(
@@ -47,7 +58,7 @@ class _CardCostState extends State<CardCost> {
             color: Colors.blue[800],
             fontWeight: FontWeight.w700,
           ),
-          "${cost.name}: ${cost.service}",
+          "${cost.displayName}: ${cost.displayService}",
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,12 +68,13 @@ class _CardCostState extends State<CardCost> {
                 color: Colors.black,
                 fontWeight: FontWeight.w500,
               ),
-              "Biaya: ${rupiahMoneyFormatter(cost.cost)}",
+              // Use dynamic formatter
+              "Biaya: ${currencyFormatter(cost.displayCost, cost.currencyCode ?? 'IDR')}",
             ),
             const SizedBox(height: 4),
             Text(
               style: TextStyle(color: Colors.green[800]),
-              "Estimasi sampai: ${formatEtd(cost.etd)}",
+              "Estimasi sampai: ${formatEtd(cost.displayEtd)}",
             ),
           ],
         ),
