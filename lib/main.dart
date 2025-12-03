@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
@@ -79,7 +80,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Style.blue800,
         scaffoldBackgroundColor: Style.grey50,
-        textTheme: Theme.of(context).textTheme.apply(
+        textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme).apply(
               bodyColor: Style.black,
               displayColor: Style.black,
             ),
