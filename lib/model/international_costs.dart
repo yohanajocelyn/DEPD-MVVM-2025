@@ -78,4 +78,7 @@ class InternationalCosts extends Equatable implements ShippingCosts {
 
   @override
   String? get currencyCode => currency ?? "IDR";
+  
+  @override
+  String? get displayCode => code;
 }

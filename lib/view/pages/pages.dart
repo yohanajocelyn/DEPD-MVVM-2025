@@ -10,3 +10,4 @@ import 'package:depd_mvvm_2025/data/response/status.dart';
 part 'main_page.dart';
 part 'home_page.dart';
 part 'international_home_page.dart';
+part 'extra_page.dart';

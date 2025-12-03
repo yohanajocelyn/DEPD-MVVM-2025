@@ -36,6 +36,10 @@ class MainPage extends StatelessWidget {
             icon: Icon(Icons.public),
             label: "International",
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.star),
+            label: "Extra",
+          ),
         ],
       ),
     );

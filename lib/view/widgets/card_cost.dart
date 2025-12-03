@@ -43,6 +43,7 @@ class _CardCostState extends State<CardCost> {
     final cost = widget.cost;
 
     return Card(
+      clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(color: Colors.blue[800]!),
@@ -52,35 +53,40 @@ class _CardCostState extends State<CardCost> {
         horizontal: 16,
       ),
       color: Colors.white,
-      child: ListTile(
-        title: Text(
-          style: TextStyle(
-            color: Colors.blue[800],
-            fontWeight: FontWeight.w700,
+      child: InkWell(
+        onTap: () {
+          BottomSheetsCost.show(context, cost);
+        },
+        child: ListTile(
+          title: Text(
+            style: TextStyle(
+              color: Colors.blue[800],
+              fontWeight: FontWeight.w700,
+            ),
+            "${cost.displayName}: ${cost.displayService}",
           ),
-          "${cost.displayName}: ${cost.displayService}",
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                ),
+                // Use dynamic formatter
+                "Biaya: ${currencyFormatter(cost.displayCost, cost.currencyCode ?? 'IDR')}",
               ),
-              // Use dynamic formatter
-              "Biaya: ${currencyFormatter(cost.displayCost, cost.currencyCode ?? 'IDR')}",
-            ),
-            const SizedBox(height: 4),
-            Text(
-              style: TextStyle(color: Colors.green[800]),
-              "Estimasi sampai: ${formatEtd(cost.displayEtd)}",
-            ),
-          ],
-        ),
-        leading: CircleAvatar(
-          backgroundColor: Colors.blue[50],
-          child: Icon(Icons.local_shipping, color: Colors.blue[800]),
+              const SizedBox(height: 4),
+              Text(
+                style: TextStyle(color: Colors.green[800]),
+                "Estimasi sampai: ${formatEtd(cost.displayEtd)}",
+              ),
+            ],
+          ),
+          leading: CircleAvatar(
+            backgroundColor: Colors.blue[50],
+            child: Icon(Icons.local_shipping, color: Colors.blue[800]),
+          ),
         ),
       ),
     );

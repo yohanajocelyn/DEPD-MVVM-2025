@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:go_router/go_router.dart'; // Import GoRouter
+import 'package:go_router/go_router.dart';
 
 import 'package:depd_mvvm_2025/shared/style.dart';
-import 'package:depd_mvvm_2025/view/pages/pages.dart';// Import your Main Layout
+import 'package:depd_mvvm_2025/view/pages/pages.dart';
 import 'package:depd_mvvm_2025/viewmodel/home_viewmodel.dart';
 import 'package:depd_mvvm_2025/viewmodel/international_home_viewmodel.dart';
 
@@ -14,7 +14,6 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-// 1. DEFINE THE ROUTER HERE
 final GoRouter _router = GoRouter(
   initialLocation: '/',
   routes: [
@@ -23,14 +22,12 @@ final GoRouter _router = GoRouter(
         return MainPage(navigationShell: navigationShell);
       },
       branches: [
-        // Branch 1: Domestic
         StatefulShellBranch(
           routes: [
             GoRoute(
               path: '/',
               name: 'HomePage',
               builder: (context, state) {
-                // Scoped Provider: ViewModel only lives here
                 return ChangeNotifierProvider(
                   create: (_) => HomeViewModel(),
                   child: const HomePage(),
@@ -39,18 +36,27 @@ final GoRouter _router = GoRouter(
             ),
           ],
         ),
-        // Branch 2: International
         StatefulShellBranch(
           routes: [
             GoRoute(
               path: '/international',
               name: 'InternationalHomePage',
               builder: (context, state) {
-                // Scoped Provider: ViewModel only lives here
                 return ChangeNotifierProvider(
                   create: (_) => InternationalHomeViewModel(),
                   child: const InternationalHomePage(),
                 );
+              },
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/extra',
+              name: 'ExtraPage',
+              builder: (context, state) {
+                return const ExtraPage();
               },
             ),
           ],
@@ -65,13 +71,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 2. USE MATERIALAPP.ROUTER
     return MaterialApp.router(
-      routerConfig: _router, // Pass the router configuration
+      routerConfig: _router,
       debugShowCheckedModeBanner: false,
       title: 'Flutter x RajaOngkir API',
       
-      // Keep your existing theme exactly as it was
       theme: ThemeData(
         primaryColor: Style.blue800,
         scaffoldBackgroundColor: Style.grey50,

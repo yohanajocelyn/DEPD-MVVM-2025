@@ -46,11 +46,6 @@ class InternationalHomeViewModel with ChangeNotifier {
   }
 
   ApiResponse<List<Country>> countryList = ApiResponse.notStarted();
-  
-  setCountryList(ApiResponse<List<Country>> response) {
-    countryList = response;
-    notifyListeners();
-  }
 
   Future<List<Country>> searchCountries(String query) async {
     try {

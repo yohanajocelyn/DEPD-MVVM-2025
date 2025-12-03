@@ -67,28 +67,52 @@ class InternationalHomeRepository {
     int weight,
     String courier,
   ) async {
-    // Kirim request POST untuk kalkulasi ongkir
-    final response = await _apiServices
-        .postApiResponse('calculate/international-cost', {
-          "origin": origin,
-          "destination": destination,
-          "weight": weight.toString(),
-          "courier": courier,
-        });
+    int attempts = 0;
+    int maxRetries = 3; // Retry up to 3 times
 
-    // Validasi response meta
-    final meta = response['meta'];
-    if (meta == null || meta['status'] != 'success') {
-      throw Exception("API Error: ${meta?['message'] ?? 'Unknown error'}");
+    while (attempts < maxRetries) {
+      try {
+        attempts++;
+        
+        // --- YOUR EXISTING API CALL ---
+        final response = await _apiServices.postApiResponse(
+          'calculate/international-cost', 
+          {
+            "origin": origin,
+            "destination": destination,
+            "weight": weight.toString(),
+            "courier": courier,
+          }
+        );
+
+        final meta = response['meta'];
+        
+        // If success, break the loop and process data
+        if (meta != null && meta['status'] == 'success') {
+          final data = response['data'];
+          if (data is! List) return [];
+          return data.map((e) => InternationalCosts.fromJson(e)).toList();
+        } 
+        
+        // If specific 404 "Not Found", treat as failure and trigger retry loop
+        if (meta != null && meta['code'] == 404) {
+           throw Exception(meta['message']); 
+        }
+        
+      } catch (e) {
+        // Log the error
+        print("Attempt $attempts failed: $e");
+
+        // If we reached max retries, throw the error to the UI
+        if (attempts >= maxRetries) {
+          throw Exception("Gagal mengambil data setelah $attempts percobaan. Server sibuk.");
+        }
+
+        // Wait 1 second before retrying (Backoff strategy)
+        await Future.delayed(const Duration(seconds: 1));
+      }
     }
-
-    final data = response['data'];
     
-    // === FIX STARTS HERE ===
-    if (data is! List) return [];
-
-    // Since the JSON is already flat (it has 'service', 'cost', 'name' directly),
-    // we don't need the nested loops. We just convert it directly.
-    return data.map((e) => InternationalCosts.fromJson(e)).toList();
+    return [];
   }
 }
